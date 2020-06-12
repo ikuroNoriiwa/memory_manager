@@ -1,23 +1,28 @@
+CC=gcc
+CFLAGS=-W -Wall -ansi -pedantic -std=c99
+LDFLAGS=
+EXEC=memory_manager
 
-all: memory_manager
+
+all: $(EXEC)
 
 memory_manager: util.o app.o data.o ihm.o main.o
-	gcc -o memory_manager util.o app.o data.o ihm.o main.o
+	$(CC) -o $(EXEC) util.o app.o data.o ihm.o main.o $(LDFLAGS)
 
 main.o: main.c 
-	gcc -o main.o -c main.c -W -Wall -ansi -pedantic
+	$(CC) -o main.o -c main.c $(CFLAGS)
  
 util.o: util/util.c util/util.h
-	gcc -o util.o -c util/util.c -W -Wall -ansi -pedantic
+	$(CC) -o util.o -c util/util.c $(CFLAGS)
 
 app.o: app/lectureFichier.c app/lectureFichier.h
-	gcc -o app.o -c app/lectureFichier.c -W -Wall -ansi -pedantic
+	$(CC) -o app.o -c app/lectureFichier.c $(CFLAGS)
 
 data.o: data/data.c
-	gcc -o data.o -c data/data.c -W -Wall -ansi -pedantic
+	$(CC) -o data.o -c data/data.c $(CFLAGS)
 
 ihm.o: ihm/ihm.c
-	gcc -o ihm.o -c ihm/ihm.c -W -Wall -ansi -pedantic
+	$(CC) -o ihm.o -c ihm/ihm.c $(CFLAGS)
 
 clean: 
 	rm -rf *.o
