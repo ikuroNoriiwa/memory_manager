@@ -15,7 +15,7 @@ int getMeminfo(){
 			printf("%s", ligne); 
 			memTotale = fnc_getNumberInString(ligne);
 			printf("%d\n", memTotale+1);
-			printf("Gig %.2f\n", fnc_nBtoGB(memTotale));
+			printf("Gig %.2f\n", fnc_kBtoGB(memTotale));
 		}
 	}
 	fclose(fichier);

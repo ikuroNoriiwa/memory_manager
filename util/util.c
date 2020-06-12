@@ -1,5 +1,6 @@
 #include <math.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 /**
  * converti les ko(KiloOctets ou KiloByte en anglais) en Go (GigaOctet ou GigaByte en anglais)
