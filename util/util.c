@@ -11,6 +11,10 @@ float fnc_kBtoGB(int taille){
 	return (taille / pow(10,6));
 }
 
+float fnc_kBtoMB(int taille){
+	return (taille / pow(10,3));
+}
+
 /**
  * converti une string (char*) en int 
  * supprime les lettres et ne récupère que les chiffre
