@@ -20,5 +20,5 @@
 		char* command;	// commande lancée
 		int start;	// heure de lancement
 		int time; 	// temps de fonctionnement 
-	}
+	}DefProcessus;
 #endif
