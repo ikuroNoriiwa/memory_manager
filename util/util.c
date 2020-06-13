@@ -34,3 +34,17 @@ int fnc_getNumberInString(char* str){
 
 	return ret; 
 }
+
+
+void fnc_removeChar(char *str, int retirer){
+	int x = 0;
+	
+	retirer--;
+	while(str[x] != '\0'){
+		if(x >= retirer){
+			str[x] = str[x+1];
+		}
+		x++;
+	}
+	
+}
