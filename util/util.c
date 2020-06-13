@@ -1,5 +1,6 @@
 #include <math.h>
 #include <ctype.h>
+#include <stdlib.h>
 
 /**
  * converti les ko(KiloOctets ou KiloByte en anglais) en Go (GigaOctet ou GigaByte en anglais)
@@ -8,6 +9,10 @@
  */
 float fnc_kBtoGB(int taille){
 	return (taille / pow(10,6));
+}
+
+float fnc_kBtoMB(int taille){
+	return (taille / pow(10,3));
 }
 
 /**
@@ -28,4 +33,18 @@ int fnc_getNumberInString(char* str){
 	}
 
 	return ret; 
+}
+
+
+void fnc_removeChar(char *str, int retirer){
+	int x = 0;
+	
+	retirer--;
+	while(str[x] != '\0'){
+		if(x >= retirer){
+			str[x] = str[x+1];
+		}
+		x++;
+	}
+	
 }
