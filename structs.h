@@ -11,6 +11,7 @@
 	}DefMemory; 
 	
 	typedef struct{
+		char* name;	//nom du processus
 		char* user; 	//Nom d'utilisateur propriétaire du processus
 		int pid; 	//PID 
 		int ppid;	//PID du parent
