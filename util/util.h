@@ -3,7 +3,7 @@
 
 	float fnc_kBtoGB(int taille);
         float fnc_kBtoMB(int taille);	
-	int fnc_getNumberInString(char* str); 
+	long fnc_getNumberInString(char* str); 
 	void fnc_removeChar(char *str, int retirer);
 
 #endif 
