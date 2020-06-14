@@ -17,13 +17,12 @@ float fnc_kBtoMB(int taille){
 
 /**
  * converti une string (char*) en int 
- * supprime les lettres et ne récupère que les chiffre
  * @param str : char* comprenant lettre en chiffre (ex type de RAM et taille)
  * @return int : int récupéré dans la string 
  */
-int fnc_getNumberInString(char* str){
+long fnc_getNumberInString(char* str){
 	char *ptr = str;
-	int ret = 0;
+	long ret = 0;
 	while(*ptr){
 		if(isdigit(*ptr)){
 			ret = strtol(ptr, &ptr, 10);
@@ -48,3 +47,5 @@ void fnc_removeChar(char *str, int retirer){
 	}
 	
 }
+
+

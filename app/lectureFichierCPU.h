@@ -1,5 +1,12 @@
 #ifndef _LECTUREFICHIERCPU_H
 #define _LECTUREFICHIERCPU_H
 
-	void test();
+
+#include <stdlib.h>
+#include <stdio.h> 
+#include <string.h> 
+
+#include "../structs.h"
+
+	DefCPU* getCPUInfo();
 #endif 
