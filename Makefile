@@ -16,6 +16,7 @@ util.o: util/util.c util/util.h
 	$(CC) -o util.o -c util/util.c $(CFLAGS)
 
 app.o: app/lectureFichierMemory.c app/lectureFichierMemory.h
+	rm -rf app-*.o
 	$(CC) -o app-lectureFichierMemory.o -c app/lectureFichierMemory.c $(CFLAGS)
 	$(CC) -o app-lectureFichierProcess.o -c app/lectureFichierProcess.c $(CFLAGS)
 	$(CC) -o app-lectureFichierCPU.o -c app/lectureFichierCPU.c $(CFLAGS) 
