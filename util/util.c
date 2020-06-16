@@ -1,6 +1,9 @@
+#define _POSIX_C_SOURCE 199309L
 #include <math.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <time.h>
 
 /**
  * converti les ko(KiloOctets ou KiloByte en anglais) en Go (GigaOctet ou GigaByte en anglais)
@@ -48,4 +51,33 @@ void fnc_removeChar(char *str, int retirer){
 	
 }
 
+int msleep(long tms){
+	struct timespec ts; 
+	int ret; 
 
+	if(tms < 0){
+		errno = EINVAL;
+		return -1;
+	}	
+
+	ts.tv_sec = tms / 1000;
+	ts.tv_nsec = (tms % 1000) * 1000000;
+
+	do{
+		ret = nanosleep(&ts , &ts);
+	}while(ret && errno == EINTR);
+
+	return ret; 
+
+}
+
+
+char* getCurrentTime(){
+	time_t rawtime;
+	struct tm * timeinfo;
+
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+	
+	return asctime(timeinfo);
+}

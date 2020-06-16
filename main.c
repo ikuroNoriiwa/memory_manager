@@ -3,8 +3,11 @@
 #include "app/lectureFichierMemory.h"
 #include "app/lectureFichierProcess.h"
 #include "app/lectureFichierCPU.h"
+#include "util/util.h"
 
 int main(int argc, char *argv[]){
+	
+	printf("%s\n", __TIME__);
 	getMeminfo();
 //	test();
 //	printf("sizeof int : %d\n\n", sizeof(int));
@@ -21,6 +24,16 @@ int main(int argc, char *argv[]){
 		}
 
 	}
+
+	for( i = 0; i < 8 ; i++){	
+		calculCPUUsage(&tmp[i]);
+	}
+	
+	printf("%s\n", getCurrentTime());
+	printf("%s\n",getCurrentTime());
+
+	msleep(2000);
+	printf("%s\n", getCurrentTime());
 	return 0; 
 
 }

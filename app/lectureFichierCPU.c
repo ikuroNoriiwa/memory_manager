@@ -55,3 +55,13 @@ DefCPU* getCPUInfo(){
 	}
 	return cpus;
 }
+
+
+float calculCPUUsage(DefCPU *cpu){
+	printf("Nom %s\n",cpu->cpuName);
+	double total = (cpu->t_user + cpu->t_nice + cpu->t_system + cpu->t_idle + cpu->t_iowait + cpu->t_irq + cpu->t_softirq);
+	double calc = (cpu->t_idle * 100) / total;	
+	printf("Total = %f et \charge libre : %.1f et idle : %ld \n",total,calc,cpu->t_idle);
+	
+	//return calc;
+}

@@ -9,4 +9,5 @@
 #include "../structs.h"
 
 	DefCPU* getCPUInfo();
+	float calculCPUUsage(DefCPU *cpu);
 #endif 
