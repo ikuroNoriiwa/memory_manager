@@ -1,5 +1,12 @@
 #include "lectureFichierCPU.h"
 
+/**
+ * permet de récupérer les informations des différents CPU
+ * fonction basée sur le fichier /proc/stat en mode read 
+ * 
+ * @param 
+ * @return DefCPU* : tableau dynamiquement alloué de DefCPU contenant les informations de chaque CPU *
+ */
 DefCPU* getCPUInfo(){
 	FILE *fichier = fopen("/proc/stat","r");
 	char ligne[200];
@@ -7,9 +14,11 @@ DefCPU* getCPUInfo(){
 	char* tmp; 
 	DefCPU* cpus = (DefCPU*)malloc(sizeof(DefCPU)*8);
 	while(fgets(ligne,sizeof ligne, fichier) != NULL){
-		//printf("%s", ligne);
-
+		// lit ligne par ligne le fichier /proc/stat
 		if(strstr(ligne,"cpu") != NULL){
+			//si la ligne comprend la chiane "cpu", récupère les informations 
+			//CPU 0 = processeur total
+			//CPU1-8 = coeur
 			int i = 0; 
 			tmp = strtok(ligne, " "); 
 			while(tmp != NULL){
@@ -40,6 +49,9 @@ DefCPU* getCPUInfo(){
 			//printf("%s \n", tmp[1]);
 			cptCPU++; // compte le nombre de CPU (0 = all, 1 = cpu , ..., 8 = cpu 7)
 		        //printf("\n\n Test acces : %s \n, et test : %ld\n", cpus[cptCPU-1].cpuName,cpus[cptCPU-1].t_user);	
+			
+			//pour les ligne btime, processes, procs_running et proc_blocked stock dans cpus[0]
+			//correspond au processeur total car informations globales
 		}else if(strstr(ligne,"btime") != NULL){
 			cpus[0].btime = fnc_getNumberInString(ligne);
 		}else if(strstr(ligne,"processes") != NULL){
@@ -56,12 +68,40 @@ DefCPU* getCPUInfo(){
 	return cpus;
 }
 
-
-float calculCPUUsage(DefCPU *cpu){
-	printf("Nom %s\n",cpu->cpuName);
+/**
+ * @deprecated
+ * permet de calculer l'utilisation du processeur en prenant deux DefCPU en paramètre 
+ * il faut dans l'idéal avoir 15 secondes entre chaque CPU pour avoir une utilisation correcte 
+ * @param *cpu : premier CPU pour calcul
+ * @param *cpu2 : second CPU avec un interval (min 1 seconde) pour calculer la charge
+ * @return float : résultat de la charge processeur 
+ */
+float calculCPUUsage(DefCPU *cpu, DefCPU *cpu2){
+//	printf("Nom %s\n",cpu->cpuName);
 	double total = (cpu->t_user + cpu->t_nice + cpu->t_system + cpu->t_idle + cpu->t_iowait + cpu->t_irq + cpu->t_softirq);
 	double calc = (cpu->t_idle * 100) / total;	
-	printf("Total = %f et \charge libre : %.1f et idle : %ld \n",total,calc,cpu->t_idle);
+
+	//readUptime();
+
+	double total2 = (cpu2->t_user + cpu2->t_nice + cpu2->t_system + cpu2->t_idle + cpu2->t_iowait + cpu2->t_irq + cpu2->t_softirq);
+	double calc2 = (cpu2->t_idle * 100) / total;	
+//	printf("Total = %f et \charge libre : %.1f et idle : %ld \n",total,calc,cpu->t_idle);
 	
-	//return calc;
+	return calc;
+}
+
+
+double* readUptime(double *val){
+	FILE *fichier = fopen("/proc/uptime","r"); 
+	char ligne [200]; 
+	char* ptr;
+	//double val[2];
+	
+	fgets(ligne,sizeof ligne, fichier);
+	printf("ligne complete : %s\n", ligne);
+	val[0] = strtod(ligne, &ptr); 
+	val[1] = strtod(ptr, NULL);
+	printf("test : %lf et %lf\n",val[0],val[1]);
+
+	return val;
 }

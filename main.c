@@ -7,17 +7,24 @@
 
 int main(int argc, char *argv[]){
 	
-	printf("%s\n", __TIME__);
+//	printf("%s\n", __TIME__);
 	getMeminfo();
 //	test();
 //	printf("sizeof int : %d\n\n", sizeof(int));
+	double val1[2];
+	double val2[2];
 	DefCPU* tmp = getCPUInfo();
 	int i = 0; 
-
-	for(i = 0 ; i < 8 ; i++){
+	double totalCPU1 = 0 ; 
+	double totalCPU2 = 0; 
+	float charge1;
+	float charge2;
+	for(i = 0 ; i < 1 ; i++){
 		if(i == 0 ){
 			printf("%s %ld %ld %ld %ld %ld %ld %ld \n\n", tmp[i].cpuName,tmp[i].t_user, tmp[i].t_nice, tmp[i].t_system, tmp[i].t_idle, tmp[i].t_iowait, tmp[i].t_irq, tmp[i].t_softirq);
 			printf("btime : %ld\nprocesses : %ld\nprocs_running : %ld\nprocs_blocked : %ld\n", tmp[i].btime, tmp[i].processes, tmp[i].procs_running, tmp[i].procs_blocked);
+		//	totalCPU1 = (tmp[i].t_user + tmp[i].t_nice + tmp[i].t_system + tmp[i].t_idle + tmp[i].t_iowait + tmp[i].t_irq + tmp[i].t_softirq);
+		//	printf("utilisation CPU sur long terme : %lf\n",((totalCPU1 - tmp[i].t_idle)*100)/totalCPU1);
 		}else{
 			printf("%s %ld %ld %ld %ld %ld %ld %ld \n", tmp[i].cpuName,tmp[i].t_user, tmp[i].t_nice, tmp[i].t_system, tmp[i].t_idle, tmp[i].t_iowait, tmp[i].t_irq, tmp[i].t_softirq);
 
@@ -25,14 +32,26 @@ int main(int argc, char *argv[]){
 
 	}
 
-	for( i = 0; i < 8 ; i++){	
-		calculCPUUsage(&tmp[i]);
+	for( i = 0; i < 1 ; i++){	
+		calculCPUUsage(&tmp[i],&tmp[i]);
 	}
 	
 	printf("%s\n", getCurrentTime());
 	printf("%s\n",getCurrentTime());
 
+	totalCPU1 = (tmp[0].t_user + tmp[0].t_nice + tmp[0].t_system + tmp[0].t_idle + tmp[0].t_iowait + tmp[0].t_irq + tmp[0].t_softirq);
+	charge1 = ((totalCPU1 - tmp[0].t_idle)*100) / totalCPU1; 
+	
+	readUptime(val1);
 	msleep(2000);
+
+	DefCPU* tmp2 = getCPUInfo();
+	totalCPU2 = (tmp2[0].t_user + tmp2[0].t_nice + tmp2[0].t_system + tmp2[0].t_idle + tmp2[0].t_iowait + tmp2[0].t_irq + tmp2[0].t_softirq);
+	charge2 = ((totalCPU1 - tmp2[0].t_idle)*100) / totalCPU1; 
+	printf("Charge 2 derniere secondes : %f\n",(charge1-charge2) );
+	readUptime(val2);
+	printf("valeurs charge CPU 1 : %lf et %lf charge 2 : %lf et %lf\n",val1[0],val1[1],val2[0],val2[1]); 
+	printf("charge CPU %lf\n", (100-100*(val2[1]-val1[1])/(val2[0]-val1[0])));
 	printf("%s\n", getCurrentTime());
 	return 0; 
 

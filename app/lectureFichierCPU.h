@@ -9,5 +9,6 @@
 #include "../structs.h"
 
 	DefCPU* getCPUInfo();
-	float calculCPUUsage(DefCPU *cpu);
+	float calculCPUUsage(DefCPU *cpu, DefCPU *cpu2);
+	double* readUptime(double *val);
 #endif 
