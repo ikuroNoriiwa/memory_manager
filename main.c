@@ -5,8 +5,10 @@
 #include "app/lectureFichierCPU.h"
 #include "util/util.h"
 
+void lancementAppli();
+
 int main(int argc, char *argv[]){
-	
+	lancementAppli();
 //	printf("%s\n", __TIME__);
 	getMeminfo();
 //	test();
@@ -19,7 +21,8 @@ int main(int argc, char *argv[]){
 	double totalCPU2 = 0; 
 	float charge1;
 	float charge2;
-	for(i = 0 ; i < 1 ; i++){
+	printf("TEST : %s\n",tmp[i].cpuName);
+	for(i = 0 ; i <= getNumberOfCore() ; i++){
 		if(i == 0 ){
 			printf("%s %ld %ld %ld %ld %ld %ld %ld \n\n", tmp[i].cpuName,tmp[i].t_user, tmp[i].t_nice, tmp[i].t_system, tmp[i].t_idle, tmp[i].t_iowait, tmp[i].t_irq, tmp[i].t_softirq);
 			printf("btime : %ld\nprocesses : %ld\nprocs_running : %ld\nprocs_blocked : %ld\n", tmp[i].btime, tmp[i].processes, tmp[i].procs_running, tmp[i].procs_blocked);
@@ -32,7 +35,7 @@ int main(int argc, char *argv[]){
 
 	}
 
-	for( i = 0; i < 1 ; i++){	
+	for( i = 0; i <= getNumberOfCore() ; i++){	
 		calculCPUUsage(&tmp[i],&tmp[i]);
 	}
 	
@@ -50,9 +53,21 @@ int main(int argc, char *argv[]){
 	charge2 = ((totalCPU1 - tmp2[0].t_idle)*100) / totalCPU1; 
 	printf("Charge 2 derniere secondes : %f\n",(charge1-charge2) );
 	readUptime(val2);
-	printf("valeurs charge CPU 1 : %lf et %lf charge 2 : %lf et %lf\n",val1[0],val1[1],val2[0],val2[1]); 
-	printf("charge CPU %lf\n", (100-100*(val2[1]-val1[1])/(val2[0]-val1[0])));
+//	printf("valeurs charge CPU 1 : %lf et %lf charge 2 : %lf et %lf\n",val1[0],val1[1],val2[0],val2[1]); 
+//	printf("charge CPU %lf\n", (100-100*(val2[1]-val1[1])/(val2[0]-val1[0])));
 	printf("%s\n", getCurrentTime());
 	return 0; 
 
+}
+
+
+void lancementAppli(){
+	printf("###INIT APP###\n");
+	printf("  #INIT MEM#   \n");
+	printMem();
+	printf("  #END MEM#   \n");
+	printf("  #INIT CPU#   \n");
+        printf("%d",getNumberOfCore());
+	printf("  #END CPU#   \n");
+	printf("###END APP###\n");
 }

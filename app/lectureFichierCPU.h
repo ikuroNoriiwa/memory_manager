@@ -7,6 +7,7 @@
 #include <string.h> 
 
 #include "../structs.h"
+#include "../util/util.h"
 
 	DefCPU* getCPUInfo();
 	float calculCPUUsage(DefCPU *cpu, DefCPU *cpu2);

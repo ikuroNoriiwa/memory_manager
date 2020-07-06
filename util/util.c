@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
+#include <string.h>
+#include <stdio.h> 
 
 /**
  * converti les ko(KiloOctets ou KiloByte en anglais) en Go (GigaOctet ou GigaByte en anglais)
@@ -80,4 +82,20 @@ char* getCurrentTime(){
 	timeinfo = localtime(&rawtime);
 	
 	return asctime(timeinfo);
+}
+
+
+int getNumberOfCore(){
+	FILE *fichier = fopen("/proc/stat", "r");
+	char ligne[200];
+	int cpt = 0;
+	while(fgets(ligne, sizeof ligne, fichier) != NULL){
+		if(strstr(ligne, "cpu") != NULL){
+			cpt++;	
+		}
+	}
+	cpt = cpt - 1;
+
+	fclose(fichier);
+	return cpt;
 }

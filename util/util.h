@@ -7,4 +7,6 @@
 	void fnc_removeChar(char *str, int retirer);
 	int msleep(long ms);
 	char* getCurrentTime();
+	int getNumberOfCore();
+
 #endif 

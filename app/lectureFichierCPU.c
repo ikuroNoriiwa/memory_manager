@@ -12,7 +12,7 @@ DefCPU* getCPUInfo(){
 	char ligne[200];
 	int cptCPU = 0; 
 	char* tmp; 
-	DefCPU* cpus = (DefCPU*)malloc(sizeof(DefCPU)*8);
+	DefCPU* cpus = (DefCPU*)malloc(sizeof(DefCPU)*(getNumberOfCore()+1));
 	while(fgets(ligne,sizeof ligne, fichier) != NULL){
 		// lit ligne par ligne le fichier /proc/stat
 		if(strstr(ligne,"cpu") != NULL){
@@ -26,8 +26,9 @@ DefCPU* getCPUInfo(){
 				if(i == 0){
 					cpus[cptCPU].cpuName = (char*)malloc(sizeof(char)*sizeof tmp);
 					strcpy(cpus[cptCPU].cpuName, tmp);
+					//printf("\n i : %d et nom : %s \n",cptCPU ,cpus[cptCPU].cpuName);
 				}else if(i == 1){
-					//printf("\ni : %d ligne : %s et ligne long : %ld :::", i,tmp , fnc_getNumberInString(tmp));
+				//	printf("\ni : %d ligne : %s et ligne long : %ld :::", i,tmp , fnc_getNumberInString(tmp));
 					cpus[cptCPU].t_user = fnc_getNumberInString(tmp);
 				}else if(i == 2){
 					cpus[cptCPU].t_nice = fnc_getNumberInString(tmp);
@@ -43,6 +44,8 @@ DefCPU* getCPUInfo(){
 					cpus[cptCPU].t_softirq = fnc_getNumberInString(tmp);
 				}
 				tmp = strtok(NULL, " ");
+
+				//printf("\n Nom : %s \n ", cpus[0].cpuName);
 				i++;
 			}
 			//printf("%s %s\n", strtok(ligne, " "), strtok(ligne, " ")++);
@@ -63,7 +66,8 @@ DefCPU* getCPUInfo(){
 		}
 		
 		//cptCPU++; // compte le nombre de CPU (0 = all, 1 = cpu , ..., 8 = cpu 7)
-	     	//printf("\n\n Test acces : %s \n, et test : %ld\n", cpus[cptCPU-1].cpuName,cpus[cptCPU-1].t_user);	
+	     	//printf("\n\n Test acces : %s \n, et test : %ld\n", cpus[cptCPU-1].cpuName,cpus[cptCPU-1].t_user);
+		//printf("\n Nom : %s \n ", cpus[0].cpuName);
 	}
 	return cpus;
 }
@@ -98,10 +102,10 @@ double* readUptime(double *val){
 	//double val[2];
 	
 	fgets(ligne,sizeof ligne, fichier);
-	printf("ligne complete : %s\n", ligne);
+	//printf("ligne complete : %s\n", ligne);
 	val[0] = strtod(ligne, &ptr); 
 	val[1] = strtod(ptr, NULL);
-	printf("test : %lf et %lf\n",val[0],val[1]);
+	//printf("test : %lf et %lf\n",val[0],val[1]);
 
 	return val;
 }
