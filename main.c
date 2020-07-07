@@ -46,12 +46,13 @@ int main(int argc, char *argv[]){
 	charge1 = ((totalCPU1 - tmp[0].t_idle)*100) / totalCPU1; 
 	
 	readUptime(val1);
-	msleep(2000);
+	msleep(1000);
 
 	DefCPU* tmp2 = getCPUInfo();
 	totalCPU2 = (tmp2[0].t_user + tmp2[0].t_nice + tmp2[0].t_system + tmp2[0].t_idle + tmp2[0].t_iowait + tmp2[0].t_irq + tmp2[0].t_softirq);
-	charge2 = ((totalCPU1 - tmp2[0].t_idle)*100) / totalCPU1; 
-	printf("Charge 2 derniere secondes : %f\n",(charge1-charge2) );
+	//charge2 = ((totalCPU1 - tmp2[0].t_idle)*100) / totalCPU1; 
+	//printf("Charge 2 derniere secondes : %f\n",(charge1-charge2) );
+	fnctTestCPU(tmp, tmp2);
 	readUptime(val2);
 //	printf("valeurs charge CPU 1 : %lf et %lf charge 2 : %lf et %lf\n",val1[0],val1[1],val2[0],val2[1]); 
 //	printf("charge CPU %lf\n", (100-100*(val2[1]-val1[1])/(val2[0]-val1[0])));
@@ -68,6 +69,7 @@ void lancementAppli(){
 	printf("  #END MEM#   \n");
 	printf("  #INIT CPU#   \n");
         printf("%d",getNumberOfCore());
+	printf("Temps total : %ld \n", getTotalTime(getCPUInfo()));
 	printf("  #END CPU#   \n");
 	printf("###END APP###\n");
 }

@@ -12,4 +12,6 @@
 	DefCPU* getCPUInfo();
 	float calculCPUUsage(DefCPU *cpu, DefCPU *cpu2);
 	double* readUptime(double *val);
+	long getTotalTime(DefCPU *cpu);
+	void fnctTestCPU(DefCPU *cpu1, DefCPU *cpu2);
 #endif 

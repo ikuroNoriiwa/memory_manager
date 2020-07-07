@@ -106,6 +106,38 @@ double* readUptime(double *val){
 	val[0] = strtod(ligne, &ptr); 
 	val[1] = strtod(ptr, NULL);
 	//printf("test : %lf et %lf\n",val[0],val[1]);
-
+	
+	fclose(fichier);
 	return val;
 }
+/**
+ * renvoie le temps total du CPU (adition de tous les champs)
+ * @param cpu : DefCPU 
+ * @return long : addition de tous les paramètre de temps d'un processeur / cpu 
+ */
+long getTotalTime(DefCPU *cpu){
+	return cpu->t_user + cpu->t_nice + cpu->t_system + cpu->t_irq + cpu->t_softirq + cpu->t_iowait + cpu->t_idle; 
+}
+
+
+void fnctTestCPU(DefCPU *cpu1, DefCPU *cpu2){
+	int i = 1; 
+	for(i = 1 ; i <= getNumberOfCore() ; i++){
+		printf("\nCPU name : %s \n",cpu1[i].cpuName);
+		double prevIdle = cpu1[i].t_idle + cpu1[i].t_iowait;
+		double idle = cpu2[i].t_idle + cpu2[i].t_iowait; 
+
+		double prevNonIdle = cpu1[i].t_user + cpu1[i].t_nice + cpu1[i].t_system + cpu1[i].t_irq + cpu1[i].t_softirq;
+		double nonIdle = cpu2[i].t_user + cpu2[i].t_nice + cpu2[i].t_system + cpu2[i].t_irq + cpu2[i].t_softirq;
+
+		double prevTotal = prevIdle + prevNonIdle;
+		double total = idle + nonIdle;
+
+		double totald = total - prevTotal;
+		double idled = idle - prevIdle;
+		float charge = ((totald - idled) / totald);
+		printf("Charge : %.2f\n", charge*100);
+	}
+
+}
+
