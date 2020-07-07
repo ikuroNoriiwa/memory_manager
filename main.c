@@ -63,13 +63,26 @@ int main(int argc, char *argv[]){
 
 
 void lancementAppli(){
+	DefCPU *charge1; 
+	DefCPU *charge2;	
 	printf("###INIT APP###\n");
 	printf("  #INIT MEM#   \n");
 	printMem();
 	printf("  #END MEM#   \n");
+
 	printf("  #INIT CPU#   \n");
-        printf("%d",getNumberOfCore());
+        printf("Nombre de coeur : %d\n",getNumberOfCore());
 	printf("Temps total : %ld \n", getTotalTime(getCPUInfo()));
+	while(1){
+		charge1 = getCPUInfo();
+		msleep(1000);
+		charge2 = getCPUInfo(); 
+		fnctTestCPU(charge1, charge2);
+
+		free(charge1);
+		free(charge2);
+	}
 	printf("  #END CPU#   \n");
+
 	printf("###END APP###\n");
 }
