@@ -7,7 +7,7 @@ EXEC=memory_manager
 all: $(EXEC)
 
 memory_manager: util.o app.o data.o ihm.o main.o
-	$(CC) -o $(EXEC) util.o app-*.o data.o ihm.o main.o $(LDFLAGS)
+	$(CC) -lncurses -o $(EXEC) util.o app-*.o data.o ihm.o main.o $(LDFLAGS)
 
 main.o: main.c 
 	$(CC) -o main.o -c main.c $(CFLAGS)
@@ -25,7 +25,7 @@ data.o: data/data.c
 	$(CC) -o data.o -c data/data.c $(CFLAGS)
 
 ihm.o: ihm/ihm.c
-	$(CC) -o ihm.o -c ihm/ihm.c $(CFLAGS)
+	$(CC) -lncurses -o ihm.o -c ihm/ihm.c $(CFLAGS)
 
 clean: 
 	rm -rf *.o
