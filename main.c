@@ -66,7 +66,8 @@ int main(int argc, char *argv[]){
 
 void lancementAppli(){
 	DefCPU *charge1; 
-	DefCPU *charge2;	
+	DefCPU *charge2;
+	float *tab;	
 	printf("###INIT APP###\n");
 	printf("  #INIT MEM#   \n");
 	printMem();
@@ -77,10 +78,10 @@ void lancementAppli(){
 	printf("Temps total : %ld \n", getTotalTime(getCPUInfo()));
 	while(1){
 		charge1 = getCPUInfo();
-		msleep(1000);
+		msleep(250);
 		charge2 = getCPUInfo(); 
-		fnctTestCPU(charge1, charge2);
-
+		tab = fnctTestCPU(charge1, charge2);
+		printf("charge : %.2f\n",tab[0]);
 		free(charge1);
 		free(charge2);
 	}

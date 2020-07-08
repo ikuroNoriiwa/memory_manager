@@ -69,6 +69,7 @@ DefCPU* getCPUInfo(){
 	     	//printf("\n\n Test acces : %s \n, et test : %ld\n", cpus[cptCPU-1].cpuName,cpus[cptCPU-1].t_user);
 		//printf("\n Nom : %s \n ", cpus[0].cpuName);
 	}
+	fclose(fichier);
 	return cpus;
 }
 

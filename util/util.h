@@ -8,5 +8,6 @@
 	int msleep(long ms);
 	char* getCurrentTime();
 	int getNumberOfCore();
+	void viderTampon(FILE *fichier);
 
 #endif 

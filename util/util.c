@@ -6,7 +6,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdio.h> 
-
+#include "util.h"
 /**
  * converti les ko(KiloOctets ou KiloByte en anglais) en Go (GigaOctet ou GigaByte en anglais)
  * @param taille : int correspondant à la taille en ko
@@ -87,8 +87,12 @@ char* getCurrentTime(){
 
 int getNumberOfCore(){
 	FILE *fichier = fopen("/proc/stat", "r");
+	if(fichier == NULL){
+		printf("error : %s et nomb : %d\n ", strerror(errno), errno);
+	}
 	char ligne[200];
 	int cpt = 0;
+	viderTampon(fichier);
 	while(fgets(ligne, sizeof ligne, fichier) != NULL){
 		if(strstr(ligne, "cpu") != NULL){
 			cpt++;	
@@ -98,4 +102,11 @@ int getNumberOfCore(){
 
 	fclose(fichier);
 	return cpt;
+}
+
+
+void viderTampon(FILE *fichier){
+	int c; 
+	while((c = fgetc(fichier)) != '\n'){
+	}
 }
