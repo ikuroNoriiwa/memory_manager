@@ -120,10 +120,12 @@ long getTotalTime(DefCPU *cpu){
 }
 
 
-void fnctTestCPU(DefCPU *cpu1, DefCPU *cpu2){
-	int i = 1; 
-	for(i = 1 ; i <= getNumberOfCore() ; i++){
-		printf("\nCPU name : %s \n",cpu1[i].cpuName);
+float *fnctTestCPU(DefCPU *cpu1, DefCPU *cpu2){
+	int i = 0;
+	int numberOfCore = getNumberOfCore();
+        float *chargeCPU = (float*)malloc(sizeof(float) * numberOfCore); 	
+	for(i = 0 ; i <= numberOfCore ; i++){
+	//	printf("\nCPU name : %s \n",cpu1[i].cpuName);
 		double prevIdle = cpu1[i].t_idle + cpu1[i].t_iowait;
 		double idle = cpu2[i].t_idle + cpu2[i].t_iowait; 
 
@@ -136,8 +138,9 @@ void fnctTestCPU(DefCPU *cpu1, DefCPU *cpu2){
 		double totald = total - prevTotal;
 		double idled = idle - prevIdle;
 		float charge = ((totald - idled) / totald);
-		printf("Charge : %.2f\n", charge*100);
+		chargeCPU[i] = charge * 100;
+	//	printf("Charge : %.2f\n", charge*100);
 	}
-
+	return chargeCPU;
 }
 
