@@ -10,7 +10,7 @@ memory_manager: util.o app.o data.o ihm.o main.o
 	$(CC) -lncurses -o $(EXEC) util.o app-*.o data.o ihm.o main.o $(LDFLAGS)
 
 main.o: main.c 
-	$(CC) -o main.o -c main.c $(CFLAGS)
+	$(CC) -lncurses -o main.o -c main.c $(CFLAGS)
  
 util.o: util/util.c util/util.h
 	$(CC) -o util.o -c util/util.c $(CFLAGS)

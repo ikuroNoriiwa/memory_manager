@@ -92,7 +92,6 @@ int getNumberOfCore(){
 	}
 	char ligne[200];
 	int cpt = 0;
-	viderTampon(fichier);
 	while(fgets(ligne, sizeof ligne, fichier) != NULL){
 		if(strstr(ligne, "cpu") != NULL){
 			cpt++;	
@@ -110,3 +109,52 @@ void viderTampon(FILE *fichier){
 	while((c = fgetc(fichier)) != '\n'){
 	}
 }
+
+
+
+char* getHostname(){
+	FILE *fichier = fopen("/etc/hostname", "r");
+	char ligne[200];
+	char *nom;
+	if(fichier == NULL){
+		fprintf(stderr, "fnc util::getHostname err : %s et errno %d\n",strerror(errno), errno);
+		exit(EXIT_FAILURE);
+	}
+
+	while(fgets(ligne, sizeof ligne, fichier) != NULL){
+		nom = (char*)malloc(sizeof(char) * sizeof(ligne));
+		strcpy(nom,ligne);
+		nom[strlen(nom) - 1] = '\0';
+	}
+	
+	fclose(fichier);
+	return nom;
+}
+
+char* getCPUName(){
+	FILE *fichier = fopen("/proc/cpuinfo", "r");
+	char ligne[200];
+	char *nomCPU;
+	int i = 0;
+
+	if(fichier == NULL){
+		fprintf(stderr, "fnc util::getCPUName err : %s et errno %d\n",strerror(errno), errno);
+		exit(EXIT_FAILURE);
+	}
+
+	while(fgets(ligne, sizeof ligne, fichier) != NULL){
+		if(strstr(ligne, "model name") != NULL){
+			for(i = 0; i < 13 ; i++){
+				fnc_removeChar(ligne,1);
+			}
+			nomCPU = (char*)malloc(sizeof(char) * strlen(ligne));
+			strcpy(nomCPU, ligne);
+			nomCPU[strlen(nomCPU) -1] = '\0';
+			break;
+		}
+		
+	}
+
+	return nomCPU;
+}
+

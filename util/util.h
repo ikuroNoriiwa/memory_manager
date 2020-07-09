@@ -9,5 +9,7 @@
 	char* getCurrentTime();
 	int getNumberOfCore();
 	void viderTampon(FILE *fichier);
+	char* getHostname();
+	char* getCPUName();
 
 #endif 

@@ -5,12 +5,13 @@
 #include "app/lectureFichierCPU.h"
 #include "util/util.h"
 #include "ihm/ihm.h"
-
 void lancementAppli();
 
 int main(int argc, char *argv[]){
 //	lancementAppli();
-	afficherCPU();
+	//afficherCPU();
+//	getCPUName();
+	affichMain();
 //	printf("%s\n", __TIME__);
 	getMeminfo();
 //	test();
