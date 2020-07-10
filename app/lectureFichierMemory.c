@@ -27,6 +27,13 @@ DefMemory* getMeminfo(){
 
 	}
 	fclose(fichier);
-	printf("MemTota : %.2f\nMemFree : %.2f\nMemAvai : %.2f\nCached : %.2f\nBuffers : %.2f\n ",fnc_kBtoGB(memoire->memTotale), fnc_kBtoGB(memoire->memFree), fnc_kBtoGB(memoire->memAvailable), fnc_kBtoGB(memoire->cached),fnc_kBtoMB(memoire->buffers));
+//	printf("MemTota : %.2f\nMemFree : %.2f\nMemAvai : %.2f\nCached : %.2f\nBuffers : %.2f\n ",fnc_kBtoGB(memoire->memTotale), fnc_kBtoGB(memoire->memFree), fnc_kBtoGB(memoire->memAvailable), fnc_kBtoGB(memoire->cached),fnc_kBtoMB(memoire->buffers));
 	return memoire; 
-} 
+}
+
+
+void printMem(){
+	DefMemory* memoire = getMeminfo();
+
+	printf("MemTota : %.2f\nMemFree : %.2f\nMemAvai : %.2f\nCached : %.2f\nBuffers : %.2f\n ",fnc_kBtoGB(memoire->memTotale), fnc_kBtoGB(memoire->memFree), fnc_kBtoGB(memoire->memAvailable), fnc_kBtoGB(memoire->cached),fnc_kBtoMB(memoire->buffers));
+}
