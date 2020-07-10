@@ -5,5 +5,11 @@
         float fnc_kBtoMB(int taille);	
 	long fnc_getNumberInString(char* str); 
 	void fnc_removeChar(char *str, int retirer);
+	int msleep(long ms);
+	char* getCurrentTime();
+	int getNumberOfCore();
+	void viderTampon(FILE *fichier);
+	char* getHostname();
+	char* getCPUName();
 
 #endif 
