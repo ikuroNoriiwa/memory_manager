@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
 //	getCPUName();
 	affichMain();
 //	printf("%s\n", __TIME__);
-	getMeminfo();
+/*	getMeminfo();
 //	test();
 //	printf("sizeof int : %d\n\n", sizeof(int));
 	double val1[2];
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
 	readUptime(val2);
 //	printf("valeurs charge CPU 1 : %lf et %lf charge 2 : %lf et %lf\n",val1[0],val1[1],val2[0],val2[1]); 
 //	printf("charge CPU %lf\n", (100-100*(val2[1]-val1[1])/(val2[0]-val1[0])));
-	printf("%s\n", getCurrentTime());
+	printf("%s\n", getCurrentTime());*/
 	return 0; 
 
 }
