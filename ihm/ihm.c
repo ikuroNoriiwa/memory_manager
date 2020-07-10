@@ -97,7 +97,7 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 		int hauteur = 21;
 		int j = 21; 
 		charge1 = getCPUInfo();
-		msleep(750);
+		msleep(100);
 		charge2 = getCPUInfo();
 		//affichRam(ram, memory, );
 		posRam++;
@@ -109,82 +109,79 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 			hauteur = GRAPH_HEIGHT - 2;
 			wattron(graph, COLOR_PAIR(2));
 			color = 2;
-			printf("1\n");
-		}else if(tab[0] > 5 && tab[0] < 10){
+		}else if(tab[0] >= 5.0 && tab[0] <= 10.0){
 			hauteur = GRAPH_HEIGHT - 3;
 			wattron(graph, COLOR_PAIR(2));
 			color = 2;
-			printf("2\n");
-		}else if(tab[0] > 10 && tab[0] < 15){
+		}else if(tab[0] > 10.0 && tab[0] <= 15.0){
 			hauteur = GRAPH_HEIGHT - 4;
 			wattron(graph, COLOR_PAIR(3));
 			color = 3;
-			printf("3\n");
-		}else if(tab[0] > 15 && tab[0] < 20){
+		}else if(tab[0] > 15.0 && tab[0] <= 20.0){
 			hauteur = GRAPH_HEIGHT - 5;
 			wattron(graph, COLOR_PAIR(3));
 			color = 3;
-		}else if(tab[0] > 20 && tab[0] < 25){
+		}else if(tab[0] > 20.0 && tab[0] <= 25.0){
 			hauteur = GRAPH_HEIGHT - 6;
 			wattron(graph, COLOR_PAIR(3));
 			color = 3;
-		}else if(tab[0] > 25 && tab[0] < 30){
+		}else if(tab[0] > 25.0 && tab[0] <= 30.0){
 			hauteur = GRAPH_HEIGHT - 7;
 			wattron(graph, COLOR_PAIR(3));
 			color = 3;
-		}else if(tab[0] > 30 && tab[0] < 35){
+		}else if(tab[0] > 30.0 && tab[0] <= 35.0){
 			hauteur = GRAPH_HEIGHT - 8;
 			wattron(graph, COLOR_PAIR(3));
 			color = 3;
-		}else if(tab[0] > 35 && tab[0] < 40){
+		}else if(tab[0] > 35.0 && tab[0] <= 40.0){
 			hauteur = GRAPH_HEIGHT - 9;
 			wattron(graph, COLOR_PAIR(4));
 			color = 4;
-		}else if(tab[0] > 40 && tab[0] < 45){
+		}else if(tab[0] > 40.0 && tab[0] <= 45.0){
 			hauteur = GRAPH_HEIGHT - 10;
 			wattron(graph, COLOR_PAIR(4));
 			color = 4;
-		}else if(tab[0] > 45 && tab[0] < 50){
+		}else if(tab[0] > 45.0 && tab[0] <= 50.0){
 			hauteur = GRAPH_HEIGHT - 11;
 			wattron(graph, COLOR_PAIR(4));
 			color = 4;
-		}else if(tab[0] > 50 && tab[0] < 55){
+		}else if(tab[0] > 50.0 && tab[0] <= 55.0){
 			hauteur = GRAPH_HEIGHT - 12;
 			wattron(graph, COLOR_PAIR(5));
 			color = 5;
-		}else if(tab[0] > 55 && tab[0] < 60){
+		}else if(tab[0] > 55.0 && tab[0] <= 60.0){
 			hauteur = GRAPH_HEIGHT - 13;
 			wattron(graph, COLOR_PAIR(5));
 			color = 5;
-		}else if(tab[0] > 60 && tab[0] < 65){
+		}else if(tab[0] > 60.0 && tab[0] <= 65.0){
 			hauteur = GRAPH_HEIGHT - 14;
 			wattron(graph, COLOR_PAIR(5));
 			color = 5;
-		}else if(tab[0] > 65 && tab[0] < 70){
+		}else if(tab[0] > 65.0 && tab[0] <= 70.0){
 			hauteur = GRAPH_HEIGHT - 15;
 			wattron(graph, COLOR_PAIR(5));
 			color = 5;
-		}else if(tab[0] > 70 && tab[0] < 75){
+		}else if(tab[0] > 70.0 && tab[0] <= 75.0){
 			hauteur = GRAPH_HEIGHT - 16; 
 			wattron(graph, COLOR_PAIR(6));
 			color = 6;
-		}else if(tab[0] > 75 && tab[0] < 80){
+		}else if(tab[0] > 75.0 && tab[0] <= 80.0){
 			hauteur = GRAPH_HEIGHT - 17;
 			wattron(graph, COLOR_PAIR(6));
 			color = 6;
-		}else if(tab[0] > 80 && tab[0] < 85){
+		}else if(tab[0] > 80.0 && tab[0] <= 85.0){
 			hauteur = GRAPH_HEIGHT - 18;
 			wattron(graph, COLOR_PAIR(6));
 			color = 6;
-		}else if(tab[0] > 85 && tab[0] < 90){
+		}else if(tab[0] > 85.0 && tab[0] <= 90.0){
 			hauteur = GRAPH_HEIGHT - 19;
 			wattron(graph, COLOR_PAIR(6));
 			color = 6;
-		}else if(tab[0] > 90 && tab[0] < 95){
+		}else if(tab[0] > 90.0 && tab[0] <= 95.0){
 			hauteur = GRAPH_HEIGHT - 20;
 			wattron(graph, COLOR_PAIR(6));
 			color = 6;
-		}else if(tab[0] > 95 && tab[0] < 100){
+		}else if(tab[0] > 95.0 && tab[0] <= 100.0){
 			hauteur = GRAPH_HEIGHT - 21;
 			wattron(graph, COLOR_PAIR(6));
 			color = 6;
