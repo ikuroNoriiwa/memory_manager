@@ -9,7 +9,9 @@
 
 #define GRAPH_HEIGHT 25
 #define RAM_HEIGHT 10
-#define RAM_WIDTH 107
+#define RAM_WIDTH 100
+#define MENU_LEFT 7
+#define TOP_MENU_HEIGHT 5
 
 void initAllColor(){
 	init_pair(1, COLOR_BLUE, COLOR_BLACK); //fond noir, lettre bleu
@@ -21,24 +23,27 @@ void initAllColor(){
 }
 
 void affichMain(){
-	WINDOW *menu, *pourcentage, *graphCPU, *ram;
+	WINDOW *menu, *pourcentage, *graphCPU, *ram, *menuRam;
 
 	initscr();
 	start_color();
 	initAllColor();
 
-	pourcentage = subwin(stdscr, GRAPH_HEIGHT, 7, 5, 0);
-	menu = subwin(stdscr, 5, 107, 0, 0);
-	graphCPU = subwin(stdscr, GRAPH_HEIGHT, 100, 5, 7);
-	ram = subwin(stdscr, RAM_HEIGHT, RAM_WIDTH, 30, 0);
+	pourcentage = subwin(stdscr, GRAPH_HEIGHT,MENU_LEFT, TOP_MENU_HEIGHT, 0);
+	menu = subwin(stdscr, TOP_MENU_HEIGHT, RAM_WIDTH + MENU_LEFT, 0, 0);
+	graphCPU = subwin(stdscr, GRAPH_HEIGHT, RAM_WIDTH, TOP_MENU_HEIGHT,MENU_LEFT );
+	ram = subwin(stdscr, RAM_HEIGHT, RAM_WIDTH, TOP_MENU_HEIGHT + GRAPH_HEIGHT,MENU_LEFT );
+	menuRam = subwin(stdscr,RAM_HEIGHT, MENU_LEFT, TOP_MENU_HEIGHT + GRAPH_HEIGHT, 0);
+
 
 	box(pourcentage, ACS_VLINE, ACS_HLINE);
 	box(menu, ACS_VLINE, ACS_HLINE);
 	box(graphCPU, ACS_VLINE, ACS_HLINE);
 	box(ram, ACS_VLINE, ACS_HLINE);
+	box(menuRam, ACS_VLINE, ACS_HLINE);
 
 	refresh();
-	affichMenuRam(ram);	
+	affichMenuRam(menuRam);	
 	affichMenuTopCPU(menu);
 	afficherCPU(pourcentage, graphCPU, ram);
 	refresh();
@@ -66,7 +71,7 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 	int i = 1;
 	float *tab;
  	int posRam = 0;
-  	char *global = "Utilisation globale";
+  	char *global = "global usage";
 	int color = 0;
  
   	mvwprintw(graph, 1,(100/2 - strlen(global)/2), "%s", global);
@@ -219,8 +224,13 @@ void affichRam(WINDOW *ram, DefMemory *memory, float fl){
 }
 
 
-void affichMenuRam(WINDOW *ram){
-	mvwprintw(ram, 1, 4,"test");
-	addch(ACS_VLINE);
-	wrefresh(ram);
+void affichMenuRam(WINDOW *menuRam){
+	mvwprintw(menuRam,1,1," RAM");
+	mvwprintw(menuRam,2,1,"Usage");
+	mvwprintw(menuRam,4,1, "R   ");
+	mvwprintw(menuRam,5,1, "e   T");
+	mvwprintw(menuRam,6,1, "a   i");
+	mvwprintw(menuRam,7,1, "l   m");
+	mvwprintw(menuRam,8,1, "    e");
+	wrefresh(menuRam);
 }

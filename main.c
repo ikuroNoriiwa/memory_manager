@@ -11,9 +11,9 @@ int main(int argc, char *argv[]){
 //	lancementAppli();
 	//afficherCPU();
 //	getCPUName();
-	affichMain();
+	//affichMain();
 //	printf("%s\n", __TIME__);
-/*	getMeminfo();
+	getMeminfo();/*
 //	test();
 //	printf("sizeof int : %d\n\n", sizeof(int));
 	double val1[2];
