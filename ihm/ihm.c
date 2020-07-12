@@ -28,6 +28,8 @@ void affichMain(){
 	initscr();
 	start_color();
 	initAllColor();
+	nodelay(stdscr, TRUE);
+	noecho();
 
 	pourcentage = subwin(stdscr, GRAPH_HEIGHT,MENU_LEFT, TOP_MENU_HEIGHT, 0);
 	menu = subwin(stdscr, TOP_MENU_HEIGHT, RAM_WIDTH + MENU_LEFT, 0, 0);
@@ -73,6 +75,8 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
   	char *global = "global usage";
 	int color = 0;
 	int posy = 2;
+	int c;
+	int run = 1;
  	DefMemory* memoire;// = getMeminfo();
 
   	mvwprintw(graph, 1,(100/2 - strlen(global)/2), "%s", global);
@@ -99,9 +103,10 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 	mvwprintw(haut, GRAPH_HEIGHT - 3, 1, "  5%%");
 	mvwprintw(haut, GRAPH_HEIGHT - 2, 1, "  0%%");
 
-	while(1/*getch() != 'q'*/){
+	while(run == 1/*getch() != 'q'*/){
 		int hauteur = 21;
 		int j = 21; 
+
 		charge1 = getCPUInfo();
 		msleep(100);
 		charge2 = getCPUInfo();
@@ -109,6 +114,10 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 		tab = fnctTestCPU(charge1, charge2);
 		affichRam(ram, memoire, posy);
 		posy++;
+
+		if(getch() == 'q'){
+			run = 0;
+		}
 
 		if(posy == RAM_HEIGHT-1){
 			posy = 2;
