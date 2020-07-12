@@ -12,6 +12,8 @@
 #define RAM_WIDTH 100
 #define MENU_LEFT 7
 #define TOP_MENU_HEIGHT 5
+#define CORE_WIDTH 27
+#define CORE_HEIGHT 12
 
 void initAllColor(){
 	init_pair(1, COLOR_BLUE, COLOR_BLACK); //fond noir, lettre bleu
@@ -24,18 +26,24 @@ void initAllColor(){
 
 void affichMain(){
 	WINDOW *menu, *pourcentage, *graphCPU, *ram, *menuRam;
+	WINDOW **cpu;
+	int changeFenetre = -1;
 
 	initscr();
 	start_color();
 	initAllColor();
 	nodelay(stdscr, TRUE);
 	noecho();
+	
+	cpu = (WINDOW**)malloc(sizeof(WINDOW*)*getNumberOfCore());
 
 	pourcentage = subwin(stdscr, GRAPH_HEIGHT,MENU_LEFT, TOP_MENU_HEIGHT, 0);
 	menu = subwin(stdscr, TOP_MENU_HEIGHT, RAM_WIDTH + MENU_LEFT, 0, 0);
 	graphCPU = subwin(stdscr, GRAPH_HEIGHT, RAM_WIDTH, TOP_MENU_HEIGHT,MENU_LEFT );
 	ram = subwin(stdscr, RAM_HEIGHT, RAM_WIDTH, TOP_MENU_HEIGHT + GRAPH_HEIGHT,MENU_LEFT );
 	menuRam = subwin(stdscr,RAM_HEIGHT, MENU_LEFT, TOP_MENU_HEIGHT + GRAPH_HEIGHT, 0);
+
+	//mvwprintw(menu, 2,1,"window : %ld tab window : %ld", sizeof(WINDOW), sizeof(cpu));
 
 
 	box(pourcentage, ACS_VLINE, ACS_HLINE);
@@ -47,8 +55,16 @@ void affichMain(){
 	refresh();
 	affichMenuRam(menuRam);	
 	affichMenuTopCPU(menu);
-	afficherCPU(pourcentage, graphCPU, ram);
+	changeFenetre = afficherCPU(pourcentage, graphCPU, ram);
 	refresh();
+
+	if(changeFenetre == 1){
+		wclear(pourcentage);
+		wclear(graphCPU);
+		wrefresh(graphCPU);
+		wrefresh(pourcentage);
+		affichCPU_core(cpu);	
+	}
 
 	getch();
 	endwin();
@@ -67,7 +83,7 @@ void affichMenuTopCPU(WINDOW *menu){
 	wrefresh(menu);
 }
 
-void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
+int afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 	DefCPU *charge1, *charge2;
 	int i = 1;
 	float *tab;
@@ -76,7 +92,8 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 	int color = 0;
 	int posy = 2;
 	int c;
-	int run = 1;
+	int run = TRUE;
+	int status = 0;
  	DefMemory* memoire;// = getMeminfo();
 
   	mvwprintw(graph, 1,(100/2 - strlen(global)/2), "%s", global);
@@ -103,7 +120,7 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 	mvwprintw(haut, GRAPH_HEIGHT - 3, 1, "  5%%");
 	mvwprintw(haut, GRAPH_HEIGHT - 2, 1, "  0%%");
 
-	while(run == 1/*getch() != 'q'*/){
+	while(run == TRUE){
 		int hauteur = 21;
 		int j = 21; 
 
@@ -114,9 +131,14 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 		tab = fnctTestCPU(charge1, charge2);
 		affichRam(ram, memoire, posy);
 		posy++;
-
-		if(getch() == 'q'){
-			run = 0;
+		
+		c = getch();
+		if(c == 'q'){
+			run = FALSE;
+			status = 0; // quitter appli 
+		}else if(c == 'c'){
+			run = FALSE; 
+			status = 1; // passer affichage par coeur
 		}
 
 		if(posy == RAM_HEIGHT-1){
@@ -228,6 +250,7 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 		wrefresh(ram);
 		free(tab);
 	}
+	return status;
 }
 
 void affichRam(WINDOW *ram, DefMemory *memory, int posy){
@@ -281,4 +304,22 @@ void affichMenuRam(WINDOW *menuRam){
 	mvwprintw(menuRam,7,1, "l   m");
 	mvwprintw(menuRam,8,1, "    e");
 	wrefresh(menuRam);
+}
+
+void affichCPU_core(WINDOW *cpu[]){
+	int nbCore = getNumberOfCore();
+	int i = 0;
+
+	for(i = 0 ; i < nbCore; i++){
+		if(i < 4){
+			cpu[i] = subwin(stdscr, CORE_HEIGHT, CORE_WIDTH, TOP_MENU_HEIGHT, i*CORE_WIDTH );
+			box(cpu[i], ACS_VLINE, ACS_HLINE);
+			wrefresh(cpu[i]);
+		}else if(i > 3){
+			cpu[i] = subwin(stdscr, CORE_HEIGHT, CORE_WIDTH, TOP_MENU_HEIGHT+CORE_HEIGHT, (i-4)*CORE_WIDTH );
+			box(cpu[i], ACS_VLINE, ACS_HLINE);
+			wrefresh(cpu[i]);
+		}
+	}
+	msleep(5000);
 }
