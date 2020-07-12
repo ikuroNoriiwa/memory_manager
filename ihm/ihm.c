@@ -67,13 +67,14 @@ void affichMenuTopCPU(WINDOW *menu){
 
 void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 	DefCPU *charge1, *charge2;
-	DefMemory *memory;
 	int i = 1;
 	float *tab;
  	int posRam = 0;
   	char *global = "global usage";
 	int color = 0;
- 
+	int posy = 2;
+ 	DefMemory* memoire;// = getMeminfo();
+
   	mvwprintw(graph, 1,(100/2 - strlen(global)/2), "%s", global);
 
 	mvwprintw(haut, GRAPH_HEIGHT - 22, 1, "100%%");
@@ -104,12 +105,14 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 		charge1 = getCPUInfo();
 		msleep(100);
 		charge2 = getCPUInfo();
-		//affichRam(ram, memory, );
-		posRam++;
-
+		memoire = getMeminfo();		
 		tab = fnctTestCPU(charge1, charge2);
-		affichRam(ram, memory, tab[0]);
-		//printf("test : %.2f\n",tab[0]);
+		affichRam(ram, memoire, posy);
+		posy++;
+
+		if(posy == RAM_HEIGHT-1){
+			posy = 2;
+		}
 		if(tab[0] < 5){
 			hauteur = GRAPH_HEIGHT - 2;
 			wattron(graph, COLOR_PAIR(2));
@@ -218,9 +221,45 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 	}
 }
 
-void affichRam(WINDOW *ram, DefMemory *memory, float fl){
+void affichRam(WINDOW *ram, DefMemory *memory, int posy){
+	long utilisation = memory->memTotale - memory->memFree;
+	int pourcentage = (utilisation * 100 / memory->memTotale);
+	int i = 1;
+	int color = 1;
 
-	mvwprintw(ram, 2, 1 , "%.2f", fl);
+	mvwprintw(ram, 1 , 1 , "1%%");
+	mvwprintw(ram, 1, 23, "25%%");
+	mvwprintw(ram, 1, 48, "50%%");
+	mvwprintw(ram, 1, 73, "75%%");
+	mvwprintw(ram, 1 ,95, "100%%");
+
+	mvwprintw(ram, 1, 10, "%d", pourcentage);
+
+	if(pourcentage <= 5){
+		wattron(ram, COLOR_PAIR(2));
+		color = 2;
+	}else if(pourcentage > 5 && pourcentage <= 25){
+		wattron(ram, COLOR_PAIR(3));
+		color = 3;
+	}else if(pourcentage > 25 && pourcentage <=50){
+		wattron(ram, COLOR_PAIR(4));
+		color = 4;
+	}else if(pourcentage > 50 && pourcentage <=75){
+		wattron(ram, COLOR_PAIR(5));
+		color = 5;
+	}else if(pourcentage > 75 && pourcentage < 100){
+		wattron(ram, COLOR_PAIR(6));
+		color = 6;
+	}
+	
+	for(i = 1; i <= pourcentage + 1; i++){
+		mvwprintw(ram, posy, i, " ");
+	}
+	wattroff(ram, COLOR_PAIR(color));
+
+	for(i = pourcentage; i < RAM_WIDTH - 1 ; i++){
+		mvwprintw(ram, posy, i , " ");
+	}
 }
 
 

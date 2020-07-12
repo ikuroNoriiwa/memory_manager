@@ -8,6 +8,6 @@
 	void affichMain();
 	void affichMenuTopCPU(WINDOW *menu);
 	void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram);
-	void affichRam(WINDOW *ram, DefMemory *memory, float fl);
+	void affichRam(WINDOW *ram, DefMemory *memory, int posy);
 	void affichMenuRam(WINDOW *ram);
 #endif
