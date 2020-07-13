@@ -63,7 +63,7 @@ void affichMain(){
 		wclear(graphCPU);
 		wrefresh(graphCPU);
 		wrefresh(pourcentage);
-		affichCPU_core(cpu);	
+		affichCPU_core(cpu, ram);	
 	}
 
 	getch();
@@ -306,20 +306,113 @@ void affichMenuRam(WINDOW *menuRam){
 	wrefresh(menuRam);
 }
 
-void affichCPU_core(WINDOW *cpu[]){
+void affichCPU_core(WINDOW *cpu[], WINDOW *ram){
+	DefCPU *charge1 , *charge2;
+	DefMemory *memoire;
+	float *tab;
 	int nbCore = getNumberOfCore();
-	int i = 0;
+	int i = 0, j = 2, hauteur = 2, cpt =1;
+	int color = 0;
+	int status = 0;
+	int run = TRUE;
+	int posy = 2;
+
+	charge1 = getCPUInfo();
 
 	for(i = 0 ; i < nbCore; i++){
 		if(i < 4){
 			cpu[i] = subwin(stdscr, CORE_HEIGHT, CORE_WIDTH, TOP_MENU_HEIGHT, i*CORE_WIDTH );
-			box(cpu[i], ACS_VLINE, ACS_HLINE);
-			wrefresh(cpu[i]);
 		}else if(i > 3){
 			cpu[i] = subwin(stdscr, CORE_HEIGHT, CORE_WIDTH, TOP_MENU_HEIGHT+CORE_HEIGHT, (i-4)*CORE_WIDTH );
-			box(cpu[i], ACS_VLINE, ACS_HLINE);
-			wrefresh(cpu[i]);
 		}
+
+		box(cpu[i], ACS_VLINE, ACS_HLINE);
+		mvwprintw(cpu[i],1,1, "%s", charge1[i+1].cpuName);
+		wrefresh(cpu[i]);
 	}
-	msleep(5000);
+
+	while(run == TRUE){
+		charge1 = getCPUInfo();
+		msleep(100);
+		charge2 = getCPUInfo();
+		memoire = getMeminfo();		
+		tab = fnctTestCPU(charge1, charge2);
+		affichRam(ram, memoire, posy);
+		posy++;
+		wrefresh(ram);
+
+		if(posy == RAM_HEIGHT-1){
+			posy = 2;
+		}
+		for(i = 0 ; i < nbCore ; i++){
+			mvwprintw(cpu[i], 1, 20, "%3.2f", tab[i+1]);
+			if(tab[i] <= 5){
+				wattron(cpu[i], COLOR_PAIR(2));
+				hauteur = 9; 
+				color = 2; 
+			}else if(tab[i] > 5 && tab[i] <= 10){
+				wattron(cpu[i], COLOR_PAIR(3));
+				hauteur = 9;
+				color = 3; 
+			}else if(tab[i] >10 && tab[i] <= 20){
+				wattron(cpu[i], COLOR_PAIR(3));
+				hauteur = 8; 
+				color = 3;
+			}else if(tab[i] > 20 && tab[i] <= 25){
+				wattron(cpu[i], COLOR_PAIR(3));
+				hauteur = 7; 
+				color = 3;
+			}else if(tab[i] > 25 && tab[i] <= 30){
+				wattron(cpu[i], COLOR_PAIR(4));
+				hauteur = 7;
+				color = 4;
+			}else if(tab[i] > 30 && tab[i] <= 40){
+				wattron(cpu[i], COLOR_PAIR(4));
+				hauteur = 6; 
+				color = 4;
+			}else if(tab[i] > 40 && tab[i] <= 50){
+				wattron(cpu[i], COLOR_PAIR(4));
+				hauteur = 5;
+				color = 4;
+			}else if(tab[i] > 50 && tab[i] <= 60){
+				wattron(cpu[i], COLOR_PAIR(5));
+				hauteur = 4;
+				color = 5;
+			}else if(tab[i] > 60 && tab[i] <= 70){
+				wattron(cpu[i], COLOR_PAIR(5));
+				hauteur = 4;
+				color = 5;
+			}else if(tab[i] > 70 && tab[i] <= 80){
+				wattron(cpu[i], COLOR_PAIR(6));
+				hauteur = 3;
+				color = 6;
+			}else if(tab[i] > 80 && tab[i] <= 100){
+				wattron(cpu[i], COLOR_PAIR(6));
+				hauteur = 2; 
+				color = 6;
+			}
+
+			for(j = 9 ; j >= hauteur; j --){
+				mvwprintw(cpu[i],j , cpt, "d");
+			}
+			
+			wattroff(cpu[i], COLOR_PAIR(color));
+			for(j = hauteur -1 ; j >= 2 ; j--){
+				mvwprintw(cpu[i], j , cpt, " ");
+			}
+
+			cpt++;
+			if(cpt == 24){
+				cpt = 1;
+			}else{
+				for(j = 9; j >= 2 ; j--){
+					if( i < 23){
+						mvwprintw(cpu[i], j, cpt + 1, " ");
+					}
+				}
+			}
+			wrefresh(cpu[i]);
+
+		}	
+	}
 }
