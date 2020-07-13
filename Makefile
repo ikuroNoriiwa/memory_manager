@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-W -Wall -ansi -pedantic -std=c99
+CFLAGS=-W -Wall -ansi -pedantic -std=c99 -gstabs -lncurses
 LDFLAGS=
 EXEC=memory_manager
 
@@ -7,10 +7,10 @@ EXEC=memory_manager
 all: $(EXEC)
 
 memory_manager: util.o app.o data.o ihm.o main.o
-	$(CC) -lncurses -lpthread -o $(EXEC) util.o app-*.o data.o ihm.o main.o $(LDFLAGS)
+	$(CC) -o $(EXEC) util.o app-*.o data.o ihm.o main.o $(CFLAGS)
 
 main.o: main.c 
-	$(CC) -lncurses -lpthread -o main.o -c main.c $(CFLAGS)
+	$(CC) -o main.o -c main.c $(CFLAGS)
  
 util.o: util/util.c util/util.h
 	$(CC) -o util.o -c util/util.c $(CFLAGS)
@@ -25,7 +25,7 @@ data.o: data/data.c
 	$(CC) -o data.o -c data/data.c $(CFLAGS)
 
 ihm.o: ihm/ihm.c
-	$(CC) -lncurses -lpthread -o ihm.o -c ihm/ihm.c $(CFLAGS)
+	$(CC) -o ihm.o -c ihm/ihm.c $(CFLAGS)
 
 clean: 
 	rm -rf *.o

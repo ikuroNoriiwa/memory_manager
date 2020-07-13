@@ -12,7 +12,7 @@
  * @param taille : int correspondant à la taille en ko
  * @return float : la conversion en Go 
  */
-float fnc_kBtoGB(int taille){
+float fnc_kBtoGB(long taille){
 	return (taille / pow(10,6));
 }
 

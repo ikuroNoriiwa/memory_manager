@@ -9,7 +9,11 @@
 
 #define GRAPH_HEIGHT 25
 #define RAM_HEIGHT 10
-#define RAM_WIDTH 107
+#define RAM_WIDTH 100
+#define MENU_LEFT 7
+#define TOP_MENU_HEIGHT 5
+#define CORE_WIDTH 27
+#define CORE_HEIGHT 12
 
 void initAllColor(){
 	init_pair(1, COLOR_BLUE, COLOR_BLACK); //fond noir, lettre bleu
@@ -21,27 +25,46 @@ void initAllColor(){
 }
 
 void affichMain(){
-	WINDOW *menu, *pourcentage, *graphCPU, *ram;
+	WINDOW *menu, *pourcentage, *graphCPU, *ram, *menuRam;
+	WINDOW **cpu;
+	int changeFenetre = -1;
 
 	initscr();
 	start_color();
 	initAllColor();
+	nodelay(stdscr, TRUE);
+	noecho();
+	
+	cpu = (WINDOW**)malloc(sizeof(WINDOW*)*getNumberOfCore());
 
-	pourcentage = subwin(stdscr, GRAPH_HEIGHT, 7, 5, 0);
-	menu = subwin(stdscr, 5, 107, 0, 0);
-	graphCPU = subwin(stdscr, GRAPH_HEIGHT, 100, 5, 7);
-	ram = subwin(stdscr, RAM_HEIGHT, RAM_WIDTH, 30, 0);
+	pourcentage = subwin(stdscr, GRAPH_HEIGHT,MENU_LEFT, TOP_MENU_HEIGHT, 0);
+	menu = subwin(stdscr, TOP_MENU_HEIGHT, RAM_WIDTH + MENU_LEFT, 0, 0);
+	graphCPU = subwin(stdscr, GRAPH_HEIGHT, RAM_WIDTH, TOP_MENU_HEIGHT,MENU_LEFT );
+	ram = subwin(stdscr, RAM_HEIGHT, RAM_WIDTH, TOP_MENU_HEIGHT + GRAPH_HEIGHT,MENU_LEFT );
+	menuRam = subwin(stdscr,RAM_HEIGHT, MENU_LEFT, TOP_MENU_HEIGHT + GRAPH_HEIGHT, 0);
+
+	//mvwprintw(menu, 2,1,"window : %ld tab window : %ld", sizeof(WINDOW), sizeof(cpu));
+
 
 	box(pourcentage, ACS_VLINE, ACS_HLINE);
 	box(menu, ACS_VLINE, ACS_HLINE);
 	box(graphCPU, ACS_VLINE, ACS_HLINE);
 	box(ram, ACS_VLINE, ACS_HLINE);
+	box(menuRam, ACS_VLINE, ACS_HLINE);
 
 	refresh();
-	affichMenuRam(ram);	
+	affichMenuRam(menuRam);	
 	affichMenuTopCPU(menu);
-	afficherCPU(pourcentage, graphCPU, ram);
+	changeFenetre = afficherCPU(pourcentage, graphCPU, ram);
 	refresh();
+
+	if(changeFenetre == 1){
+		wclear(pourcentage);
+		wclear(graphCPU);
+		wrefresh(graphCPU);
+		wrefresh(pourcentage);
+		affichCPU_core(cpu, ram);	
+	}
 
 	getch();
 	endwin();
@@ -60,15 +83,19 @@ void affichMenuTopCPU(WINDOW *menu){
 	wrefresh(menu);
 }
 
-void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
+int afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 	DefCPU *charge1, *charge2;
-	DefMemory *memory;
 	int i = 1;
 	float *tab;
  	int posRam = 0;
-  	char *global = "Utilisation globale";
+  	char *global = "global usage";
 	int color = 0;
- 
+	int posy = 2;
+	int c;
+	int run = TRUE;
+	int status = 0;
+ 	DefMemory* memoire;// = getMeminfo();
+
   	mvwprintw(graph, 1,(100/2 - strlen(global)/2), "%s", global);
 
 	mvwprintw(haut, GRAPH_HEIGHT - 22, 1, "100%%");
@@ -93,18 +120,30 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 	mvwprintw(haut, GRAPH_HEIGHT - 3, 1, "  5%%");
 	mvwprintw(haut, GRAPH_HEIGHT - 2, 1, "  0%%");
 
-	while(1/*getch() != 'q'*/){
+	while(run == TRUE){
 		int hauteur = 21;
 		int j = 21; 
+
 		charge1 = getCPUInfo();
 		msleep(100);
 		charge2 = getCPUInfo();
-		//affichRam(ram, memory, );
-		posRam++;
-
+		memoire = getMeminfo();		
 		tab = fnctTestCPU(charge1, charge2);
-		affichRam(ram, memory, tab[0]);
-		//printf("test : %.2f\n",tab[0]);
+		affichRam(ram, memoire, posy);
+		posy++;
+		
+		c = getch();
+		if(c == 'q'){
+			run = FALSE;
+			status = 0; // quitter appli 
+		}else if(c == 'c'){
+			run = FALSE; 
+			status = 1; // passer affichage par coeur
+		}
+
+		if(posy == RAM_HEIGHT-1){
+			posy = 2;
+		}
 		if(tab[0] < 5){
 			hauteur = GRAPH_HEIGHT - 2;
 			wattron(graph, COLOR_PAIR(2));
@@ -211,16 +250,169 @@ void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram){
 		wrefresh(ram);
 		free(tab);
 	}
+	return status;
 }
 
-void affichRam(WINDOW *ram, DefMemory *memory, float fl){
+void affichRam(WINDOW *ram, DefMemory *memory, int posy){
+	long utilisation = memory->memTotale - memory->memFree;
+	int pourcentage = (utilisation * 100 / memory->memTotale);
+	int i = 1;
+	int color = 1;
 
-	mvwprintw(ram, 2, 1 , "%.2f", fl);
+	mvwprintw(ram, 1 , 1 , "1%%");
+	mvwprintw(ram, 1, 23, "25%%");
+	mvwprintw(ram, 1, 48, "50%%");
+	mvwprintw(ram, 1, 73, "75%%");
+	mvwprintw(ram, 1 ,95, "100%%");
+
+	mvwprintw(ram, 1, 10, "%d", pourcentage);
+
+	if(pourcentage <= 5){
+		wattron(ram, COLOR_PAIR(2));
+		color = 2;
+	}else if(pourcentage > 5 && pourcentage <= 25){
+		wattron(ram, COLOR_PAIR(3));
+		color = 3;
+	}else if(pourcentage > 25 && pourcentage <=50){
+		wattron(ram, COLOR_PAIR(4));
+		color = 4;
+	}else if(pourcentage > 50 && pourcentage <=75){
+		wattron(ram, COLOR_PAIR(5));
+		color = 5;
+	}else if(pourcentage > 75 && pourcentage < 100){
+		wattron(ram, COLOR_PAIR(6));
+		color = 6;
+	}
+	
+	for(i = 1; i <= pourcentage + 1; i++){
+		mvwprintw(ram, posy, i, " ");
+	}
+	wattroff(ram, COLOR_PAIR(color));
+
+	for(i = pourcentage; i < RAM_WIDTH - 1 ; i++){
+		mvwprintw(ram, posy, i , " ");
+	}
 }
 
 
-void affichMenuRam(WINDOW *ram){
-	mvwprintw(ram, 1, 4,"test");
-	addch(ACS_VLINE);
-	wrefresh(ram);
+void affichMenuRam(WINDOW *menuRam){
+	mvwprintw(menuRam,1,1," RAM");
+	mvwprintw(menuRam,2,1,"Usage");
+	mvwprintw(menuRam,4,1, "R   ");
+	mvwprintw(menuRam,5,1, "e   T");
+	mvwprintw(menuRam,6,1, "a   i");
+	mvwprintw(menuRam,7,1, "l   m");
+	mvwprintw(menuRam,8,1, "    e");
+	wrefresh(menuRam);
+}
+
+void affichCPU_core(WINDOW *cpu[], WINDOW *ram){
+	DefCPU *charge1 , *charge2;
+	DefMemory *memoire;
+	float *tab;
+	int nbCore = getNumberOfCore();
+	int i = 0, j = 2, hauteur = 2, cpt =1;
+	int color = 0;
+	int status = 0;
+	int run = TRUE;
+	int posy = 2;
+
+	charge1 = getCPUInfo();
+
+	for(i = 0 ; i < nbCore; i++){
+		if(i < 4){
+			cpu[i] = subwin(stdscr, CORE_HEIGHT, CORE_WIDTH, TOP_MENU_HEIGHT, i*CORE_WIDTH );
+		}else if(i > 3){
+			cpu[i] = subwin(stdscr, CORE_HEIGHT, CORE_WIDTH, TOP_MENU_HEIGHT+CORE_HEIGHT, (i-4)*CORE_WIDTH );
+		}
+
+		box(cpu[i], ACS_VLINE, ACS_HLINE);
+		mvwprintw(cpu[i],1,1, "%s", charge1[i+1].cpuName);
+		wrefresh(cpu[i]);
+	}
+
+	while(run == TRUE){
+		charge1 = getCPUInfo();
+		msleep(100);
+		charge2 = getCPUInfo();
+		memoire = getMeminfo();		
+		tab = fnctTestCPU(charge1, charge2);
+		affichRam(ram, memoire, posy);
+		posy++;
+		wrefresh(ram);
+
+		if(posy == RAM_HEIGHT-1){
+			posy = 2;
+		}
+		for(i = 0 ; i < nbCore ; i++){
+			mvwprintw(cpu[i], 1, 20, "%3.2f", tab[i+1]);
+			if(tab[i] <= 5){
+				wattron(cpu[i], COLOR_PAIR(2));
+				hauteur = 9; 
+				color = 2; 
+			}else if(tab[i] > 5 && tab[i] <= 10){
+				wattron(cpu[i], COLOR_PAIR(3));
+				hauteur = 9;
+				color = 3; 
+			}else if(tab[i] >10 && tab[i] <= 20){
+				wattron(cpu[i], COLOR_PAIR(3));
+				hauteur = 8; 
+				color = 3;
+			}else if(tab[i] > 20 && tab[i] <= 25){
+				wattron(cpu[i], COLOR_PAIR(3));
+				hauteur = 7; 
+				color = 3;
+			}else if(tab[i] > 25 && tab[i] <= 30){
+				wattron(cpu[i], COLOR_PAIR(4));
+				hauteur = 7;
+				color = 4;
+			}else if(tab[i] > 30 && tab[i] <= 40){
+				wattron(cpu[i], COLOR_PAIR(4));
+				hauteur = 6; 
+				color = 4;
+			}else if(tab[i] > 40 && tab[i] <= 50){
+				wattron(cpu[i], COLOR_PAIR(4));
+				hauteur = 5;
+				color = 4;
+			}else if(tab[i] > 50 && tab[i] <= 60){
+				wattron(cpu[i], COLOR_PAIR(5));
+				hauteur = 4;
+				color = 5;
+			}else if(tab[i] > 60 && tab[i] <= 70){
+				wattron(cpu[i], COLOR_PAIR(5));
+				hauteur = 4;
+				color = 5;
+			}else if(tab[i] > 70 && tab[i] <= 80){
+				wattron(cpu[i], COLOR_PAIR(6));
+				hauteur = 3;
+				color = 6;
+			}else if(tab[i] > 80 && tab[i] <= 100){
+				wattron(cpu[i], COLOR_PAIR(6));
+				hauteur = 2; 
+				color = 6;
+			}
+
+			for(j = 9 ; j >= hauteur; j --){
+				mvwprintw(cpu[i],j , cpt, "d");
+			}
+			
+			wattroff(cpu[i], COLOR_PAIR(color));
+			for(j = hauteur -1 ; j >= 2 ; j--){
+				mvwprintw(cpu[i], j , cpt, " ");
+			}
+
+			cpt++;
+			if(cpt == 24){
+				cpt = 1;
+			}else{
+				for(j = 9; j >= 2 ; j--){
+					if( i < 23){
+						mvwprintw(cpu[i], j, cpt + 1, " ");
+					}
+				}
+			}
+			wrefresh(cpu[i]);
+
+		}	
+	}
 }
