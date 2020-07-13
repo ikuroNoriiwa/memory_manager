@@ -7,7 +7,8 @@
 	void initAllColor();
 	void affichMain();
 	void affichMenuTopCPU(WINDOW *menu);
-	void afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram);
-	void affichRam(WINDOW *ram, DefMemory *memory, float fl);
+	int afficherCPU(WINDOW *haut, WINDOW *graph, WINDOW *ram);
+	void affichRam(WINDOW *ram, DefMemory *memory, int posy);
 	void affichMenuRam(WINDOW *ram);
+	void affichCPU_core(WINDOW *cpu[], WINDOW *ram);
 #endif
